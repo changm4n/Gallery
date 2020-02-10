@@ -47,9 +47,6 @@ class GalleryCell: UICollectionViewCell {
             progress: nil) { [weak self] (image, data, error, cacheType, finish, url) in
                 guard let this = self else { return }
                 this.imageView.image = image
-                if cacheType == .none {
-                    print("non - cache")
-                }
         }
     }
 }

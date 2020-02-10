@@ -7,6 +7,7 @@ target 'Gallery' do
   pod 'RxSwift'
   pod 'RxCocoa'
   pod 'Alamofire'
+  pod 'RxAlamofire'
   pod 'SnapKit'
   pod 'Kanna', '~> 5.0.0'
   pod 'SDWebImage', '~> 5.0'
