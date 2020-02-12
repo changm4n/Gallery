@@ -10,8 +10,6 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
-import Alamofire
-import Kanna
 
 class ViewController: BaseViewController {
     
@@ -28,6 +26,7 @@ class ViewController: BaseViewController {
     var refreshControl = UIRefreshControl()
     
     override func setupUI() {
+        self.title = "Gallery"
         self.view.backgroundColor = .white
         self.view.addSubview(collectionView)
         self.collectionView.refreshControl = refreshControl
@@ -44,16 +43,29 @@ class ViewController: BaseViewController {
             .bind(to: viewModel.trigger).disposed(by: disposeBag)
         
         //Output Binding
-        self.viewModel.output.asDriver(onErrorJustReturn: []).drive(self.collectionView.rx.items(cellIdentifier: "GalleryCell", cellType: GalleryCell.self)) { collectionView, item, cell in
+        self.viewModel.output.asDriver(onErrorJustReturn: [])
+            .drive(self.collectionView.rx.items(cellIdentifier: "GalleryCell",
+                                                cellType: GalleryCell.self)) { collectionView, item, cell in
             cell.bind(item: item)
         }.disposed(by: disposeBag)
         
-        self.viewModel.output.observeOn(MainScheduler.instance).subscribe { (_) in
+        self.viewModel.output
+            .observeOn(MainScheduler.instance)
+            .subscribe { (_) in
             self.refreshControl.endRefreshing()
         }.disposed(by: disposeBag)
+        
+        self.collectionView.rx
+            .modelSelected(Photo.self)
+            .subscribe(onNext: { [weak self] (model) in
+                let vc = DetailViewController()
+                vc.photo = model
+                self?.navigationController?.pushViewController(vc, animated: true)
+            }).disposed(by: disposeBag)
     }
 }
 
+//MARK : Set Layout
 extension ViewController: UITableViewDelegate {
     
     func setLayout() {
@@ -62,5 +74,3 @@ extension ViewController: UITableViewDelegate {
         }
     }
 }
-
-

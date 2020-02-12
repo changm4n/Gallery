@@ -8,10 +8,13 @@
 
 import Foundation
 import UIKit
-import SDWebImage
+import RxSwift
+import RxCocoa
 import SnapKit
 
 class GalleryCell: UICollectionViewCell {
+    
+    let disposeBag = DisposeBag()
     
     let imageView: UIImageView = {
         let iv = UIImageView(frame: CGRect.zero)
@@ -27,26 +30,31 @@ class GalleryCell: UICollectionViewCell {
         self.setLayout()
     }
     
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func prepareForReuse() {
+        imageView.image = nil
+    }
+    
     func setLayout() {
         imageView.snp.makeConstraints({
             $0.edges.equalToSuperview()
         })
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     func bind(item: Photo) {
         guard let url = item.url else { return }
         
-        SDWebImageManager.shared.loadImage(
-            with: url,
-            options: .continueInBackground,
-            context: [.imageThumbnailPixelSize : self.imageView.frame.size],
-            progress: nil) { [weak self] (image, data, error, cacheType, finish, url) in
-                guard let this = self else { return }
-                this.imageView.image = image
-        }
+        //For @2x
+        var size = self.imageView.frame.size
+        size.width *= 2
+        size.height *= 2
+        
+        GalleryService.shared.getImage(byURL: url, size: size)
+            .asDriver(onErrorJustReturn: UIImage())
+            .drive(self.imageView.rx.image)
+        .disposed(by: disposeBag)
     }
 }

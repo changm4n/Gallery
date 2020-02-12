@@ -9,6 +9,29 @@
 			<key>orderHint</key>
 			<integer>11</integer>
 		</dict>
+		<key>GalleryTests.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>12</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>EDC1CCF823E69E61006ED196</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>EDC1CD1123E69E63006ED196</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>EDC1CD1C23E69E63006ED196</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 	</dict>
 </dict>
 </plist>
